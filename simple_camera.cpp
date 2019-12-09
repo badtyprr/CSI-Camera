@@ -24,7 +24,7 @@ int main()
     int capture_height = 720 ;
     int display_width = 1280 ;
     int display_height = 720 ;
-    int framerate = 60 ;
+    int framerate = 60;
     int flip_method = 0 ;
 
     std::string pipeline = gstreamer_pipeline(capture_width,
@@ -41,7 +41,8 @@ int main()
 	return (-1);
     }
 
-    cv::namedWindow("CSI Camera", cv::WINDOW_AUTOSIZE);
+    cv::namedWindow("CSI Camera", cv::WND_PROP_FULLSCREEN);
+    cv::setWindowProperty("CSI Camera", cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
     cv::Mat img;
 
     std::cout << "Hit ESC to exit" << "\n" ;
