@@ -18,17 +18,25 @@ Dependencies:
 #include <functional>
 #include <cstdlib>
 #include <vector>
+#include <cstring>
 // Use for Resource Management, automatic allocation/deallocation of memory objects, by overloading std::shared_ptr and RAII principles
 // Source: https://vulkan-tutorial.com/en/Drawing_a_triangle/Setup/Base_code
 // Source: https://en.wikipedia.org/wiki/Resource_Acquisition_Is_Initialization
 //#include <memory>
 
-// Debug
-#define DEBUG
-
 // Window Parameters
 const int WIDTH = 800;
 const int HEIGHT = 600;
+
+const std::vector<const char*> validationLayers = {
+	"VK_LAYER_KHRONOS_validation"
+};
+
+#ifdef NDEBUG
+	const bool enableValidationLayers = false;
+#else
+	const bool enableValidationLayers = true;
+#endif
 
 class HelloTriangleApplication {
 public:
@@ -57,6 +65,10 @@ private:
     }
 
 	void createInstance() {
+		if (enableValidationLayers && !checkValidationLayerSupport()) {
+			throw std::runtime_error("validation layers requested, but not available!");
+		}
+
 		// Application info struct for the driver
 		VkApplicationInfo appInfo = {};
 		appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
@@ -72,6 +84,15 @@ private:
 		VkInstanceCreateInfo createInfo = {};
 		createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		createInfo.pApplicationInfo = &appInfo;
+
+		// Include validation layer names, if enabled
+		if (enableValidationLayers) {
+			createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
+			createInfo.ppEnabledLayerNames = validationLayers.data();
+		}
+		else {
+			createInfo.enabledLayerCount = 0;
+		}
 		
 		// Get extensions from GLFW
 		uint32_t glfwExtensionCount = 0;
@@ -112,6 +133,43 @@ private:
 	void checkVkExtensions() {
 	}
 
+	bool checkValidationLayerSupport() {
+		uint32_t layerCount;
+		bool layerException = false;
+		vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+		
+		std::vector<VkLayerProperties> availableLayers(layerCount);
+		vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+		
+		spdlog::debug("Available Layers:");
+
+		for (const char* layerName : validationLayers) {
+			bool layerFound = false;
+
+			// TODO: For some reason, validation layers are available but available in the instance
+			for (const auto& layerProperties : availableLayers) {
+				spdlog::debug("\t{} == {} ?", layerName, layerProperties.layerName);
+				if (strcmp(layerName, layerProperties.layerName) == 0) {
+					layerFound = true;
+					break;
+				}
+			}
+
+			if (layerFound) {
+				spdlog::debug("\t{} FOUND", layerName);
+			}
+			else {
+				spdlog::debug("\t{} NOT FOUND", layerName);
+				layerException = true;
+			}
+		}
+
+		if (layerException)
+			return false;
+		else
+			return true;
+	}
+
     void initVulkan() {
 		createInstance();
     }
@@ -135,7 +193,7 @@ private:
 };
 
 int main() {
-#ifdef DEBUG
+#ifndef NDEBUG
 	spdlog::set_level(spdlog::level::debug);
 #endif
     HelloTriangleApplication app;

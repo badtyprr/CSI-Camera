@@ -5,6 +5,7 @@ find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(spdlog REQUIRED)
 add_executable(${TARGET} main.cpp)
+# XLIB = x11
 target_compile_definitions(${TARGET} PRIVATE VK_USE_PLATFORM_XLIB_KHR)
 target_include_directories(${TARGET} PRIVATE Vulkan::Vulkan)
 target_link_libraries(${TARGET} Vulkan::Vulkan)
