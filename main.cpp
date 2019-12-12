@@ -146,7 +146,8 @@ private:
 		for (const char* layerName : validationLayers) {
 			bool layerFound = false;
 
-			// TODO: For some reason, validation layers are available but available in the instance
+			// TODO: validation layers are available but available in the instance, although it appears that VK_LAYER_KHRONOS_validation is the layer name, but the instance has the name VK_LAYER_LUNARG_standard_validation. Perhaps the x86_64 SDK can somehow to be made to crosscompile to arm64? https://github.com/Tencent/ncnn/wiki/how-to-build#build-for-arm-cortex-a-family-with-cross-compiling
+
 			for (const auto& layerProperties : availableLayers) {
 				spdlog::debug("\t{} == {} ?", layerName, layerProperties.layerName);
 				if (strcmp(layerName, layerProperties.layerName) == 0) {
