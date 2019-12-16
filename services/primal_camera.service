@@ -1,0 +1,15 @@
+[Unit]
+Description=Primal Camera System
+Requires=graphical.target
+
+[Service]
+Type=simple
+# Prototype executable
+ExecStart=/usr/local/bin/primal_camera_proto
+# Production executable
+#ExecStart=/usr/local/bin/primal_camera
+#Restart=no
+#Environment=DISPLAY=:0
+
+[Install]
+WantedBy=graphical.target

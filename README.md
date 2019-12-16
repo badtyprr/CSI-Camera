@@ -101,4 +101,11 @@ Initial Release (v1.0) March, 2019
 * L4T 32.1.0 (JetPack 4.2)
 * Tested on Jetson Nano
 
+<h2>Startup Notes</h2>
+After compilation and installation, the executables should appear in:
+* /usr/local/bin/primal_camera			(production)
+* /usr/local/bin/primal_camera_proto	(prototype)
 
+Because root does not have a separate x11 window for the prototype build, the executable is launched from the user's "Startup Applications" found in the GNOME settings.
+
+A known issue with this is that if the process crashes for any reason, it will not be reloaded like a service.
