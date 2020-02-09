@@ -25,7 +25,7 @@ int main()
     int display_width = 1280 ;
     int display_height = 720 ;
 	// It seems that the nvarguscamerasrc treats 60 and 120 fps the same in terms of gain and exposure time limits. This goes against logic. It also does not seem possible to select a framerate of 60 fps, as it just switches back to 120 fps.
-    int framerate = 120;
+    int framerate = 60;
     int flip_method = 0 ;
 
     std::string pipeline = gstreamer_pipeline(capture_width,
