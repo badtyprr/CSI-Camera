@@ -1,11 +1,3 @@
-// simple_camera.cpp
-// MIT License
-// Copyright (c) 2019 JetsonHacks
-// See LICENSE for OpenCV license and additional information
-// Using a CSI camera (such as the Raspberry Pi Version 2) connected to a 
-// NVIDIA Jetson Nano Developer Kit using OpenCV
-// Drivers for the camera and OpenCV are included in the base image
-
 // #include <iostream>
 #include <opencv2/opencv.hpp>
 // #include <opencv2/videoio.hpp>
@@ -24,8 +16,8 @@ int main()
     int capture_height = 720 ;
     int display_width = 1280 ;
     int display_height = 720 ;
-	// It seems that the nvarguscamerasrc treats 60 and 120 fps the same in terms of gain and exposure time limits. This goes against logic. It also does not seem possible to select a framerate of 60 fps, as it just switches back to 120 fps.
-    int framerate = 120;
+	// It seems that the nvarguscamerasrc treats 60 and 120 fps the same in terms of gain and exposure time limits. This goes against logic. It also does not seem possible to select a framerate of 60 fps, as it just switches back to 120 fps. However, the kernel driver still requests a 24MHz clock for 120fps and a 12MHz clock for 60fps. 120fps freezes up the driver after a while. So, it's better to just select 60fps.
+    int framerate = 60;
     int flip_method = 0 ;
 
     std::string pipeline = gstreamer_pipeline(capture_width,
